@@ -18,6 +18,7 @@ const ASSETS: Record<string, { path: string; type: string }> = {
   "site.css": { path: join(ROOT, "dist", "site.css"), type: "text/css; charset=utf-8" },
   "specimen.css": { path: join(ROOT, "dist", "specimen.css"), type: "text/css; charset=utf-8" },
   "site.js": { path: join(ROOT, "public", "site.js"), type: "text/javascript; charset=utf-8" },
+  "favicon.svg": { path: join(ROOT, "public", "favicon.svg"), type: "image/svg+xml" },
 };
 
 const LEGACY_REDIRECTS: Record<string, string> = {
@@ -25,6 +26,7 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/flows": "/components",
   "/scanner": "/",
   "/editor": "/",
+  "/favicon.ico": "/assets/favicon.svg",
 };
 
 const SECURITY_HEADERS = {

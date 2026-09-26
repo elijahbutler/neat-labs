@@ -21,7 +21,7 @@ export function Layout({ title, catalogue, head, fullWidth, children }: { title:
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{`${title} · Neat Labs`}</title>
         <meta name="description" content="A design editor for Next.js teams, in development. Connect a repo, change your running app by drawing, dragging, or asking, and get a pull request that uses your own components." />
-        <link rel="icon" href="data:," />
+        <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={FONTS} />

@@ -98,7 +98,7 @@ describe("marketing site", () => {
   });
 
   test("pages from the earlier site redirect", async () => {
-    for (const [from, to] of [["/catalog", "/styles"], ["/flows", "/components"], ["/scanner", "/"]]) {
+    for (const [from, to] of [["/catalog", "/styles"], ["/flows", "/components"], ["/scanner", "/"], ["/favicon.ico", "/assets/favicon.svg"]]) {
       const res = await fetch(new URL(from!, server.url), { redirect: "manual" });
       expect(`${from} ${res.status} ${res.headers.get("location")}`).toBe(`${from} 301 ${to}`);
     }
@@ -112,6 +112,7 @@ describe("marketing site", () => {
     });
     expect(init.status).toBe(200);
     expect((await get("/api/health")).status).toBe(200);
+    expect((await get("/assets/favicon.svg")).headers.get("content-type")).toBe("image/svg+xml");
     // The earlier site also answered GET on both paths with 405; there was never a working SSE stream.
     expect((await fetch(new URL("/api/sse", server.url), { headers: { Accept: "text/event-stream" } })).status).toBe(405);
   });
