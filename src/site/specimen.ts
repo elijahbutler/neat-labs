@@ -46,7 +46,9 @@ export async function specimenHtml(catalogue: Catalogue, req: SpecimenRequest): 
   try {
     markup = await renderComponent(component, example.props);
   } catch (error) {
-    return { status: 500, html: failure(title, `${component.export} threw while rendering: ${(error as Error).message}`) };
+    // The error can include server paths, so it goes to the log, not the page.
+    console.error(`specimen ${component.id}@${component.revision}:`, error);
+    return { status: 500, html: failure(title, `${component.name} threw an error while rendering. The error is in the server log.`) };
   }
   const head = [
     `<link rel="stylesheet" href="/assets/specimen.css">`,

@@ -50,6 +50,24 @@ describe("site", () => {
     expect(await noDark.text()).toContain("Signal has no dark mode");
   });
 
+  test("a render failure shows a notice without server details", async () => {
+    const c = await loadCatalogue();
+    const broken = { ...c, components: [{ ...c.components[0]!, id: "not-on-disk" }] };
+    const handle = createHandler(async () => broken);
+    const originalError = console.error;
+    console.error = () => {};
+    try {
+      const res = await handle(new Request("http://site.test/specimen/not-on-disk"));
+      const html = await res.text();
+      expect(res.status).toBe(500);
+      expect(html).toContain("Specimen failed to render");
+      expect(html).not.toContain(ROOT);
+      expect(html).not.toContain("component.tsx");
+    } finally {
+      console.error = originalError;
+    }
+  });
+
   test("the style page shows missing values instead of inventing them", async () => {
     const html = await (await get("/styles/signal")).text();
     expect(html).toContain("colors.light.focus");
