@@ -39,6 +39,7 @@ describe("site", () => {
     const style = c.styles.find((s) => s.id === "harbor")!;
     const html = await (await get("/specimen/pricing-tiers?style=harbor&mode=dark&example=1")).text();
     expect(html).toContain('data-theme="dark"');
+    expect((await get("/specimen/pricing-tiers")).headers.get("cache-control")).toBe("no-transform");
     expect(html).toContain(themePackage(c, component, style).themeCss);
     expect(html).toContain(await renderComponent(component, component.examples[1]!.props));
   });

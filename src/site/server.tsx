@@ -103,8 +103,12 @@ export function createHandler(getCatalogue: () => Promise<Catalogue> = loadDefau
       const mode = url.searchParams.get("mode") ?? "light";
       if (!component || (mode !== "light" && mode !== "dark")) return new Response("Unknown component or mode.", { status: 404 });
       const { status, html } = await specimenHtml(catalogue, { component, style, mode: mode as Mode, example: Number(url.searchParams.get("example") ?? 0) });
-      // Specimens are only framed by this site.
-      return new Response(html, { status, headers: { "Content-Type": "text/html; charset=utf-8", ...SECURITY_HEADERS, "Content-Security-Policy": "frame-ancestors 'self'; script-src 'none'" } });
+      // Specimens are only framed by this site. no-transform keeps a CDN from injecting scripts, such as an analytics
+      // beacon, that the sandboxed frame would block.
+      return new Response(html, {
+        status,
+        headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-transform", ...SECURITY_HEADERS, "Content-Security-Policy": "frame-ancestors 'self'; script-src 'none'" },
+      });
     }
 
     if (path === "/styles") return page(<StylesPage catalogue={catalogue} />);
