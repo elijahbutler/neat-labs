@@ -111,6 +111,8 @@ describe("marketing site", () => {
     });
     expect(init.status).toBe(200);
     expect((await get("/api/health")).status).toBe(200);
+    // The earlier site also answered GET on both paths with 405; there was never a working SSE stream.
+    expect((await fetch(new URL("/api/sse", server.url), { headers: { Accept: "text/event-stream" } })).status).toBe(405);
   });
 });
 
@@ -161,6 +163,31 @@ describe("waitlist", () => {
     expect(bot.status).toBe(200);
 
     expect(readFileSync(file, "utf8").trim().split("\n").map((l) => (JSON.parse(l) as { email: string }).email)).toEqual(["ada@example.com", "grace@example.com"]);
+  });
+
+  test("simultaneous signups for the same address append it once", async () => {
+    const file = join(dir, "concurrent.jsonl");
+    const results = await Promise.all(Array.from({ length: 10 }, () => addToWaitlist(file, "same@example.com")));
+    expect(results.filter((r) => r === "added")).toHaveLength(1);
+    expect(readFileSync(file, "utf8").trim().split("\n")).toHaveLength(1);
+  });
+
+  test("an unreadable list fails the signup instead of skipping the duplicate check", async () => {
+    const unreadable = join(dir, "is-a-directory");
+    mkdirSync(unreadable);
+    await expect(addToWaitlist(unreadable, "ada@example.com")).rejects.toThrow();
+    const originalError = console.error;
+    console.error = () => {};
+    try {
+      const res = await handleWaitlist(
+        new Request("http://site.test/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: "ada@example.com" }) }),
+        { file: unreadable, limiter: new RateLimiter(100, 60_000) },
+      );
+      expect(res.status).toBe(503);
+      expect(await res.text()).not.toContain(dir);
+    } finally {
+      console.error = originalError;
+    }
   });
 
   test("the limiter answers 429", async () => {

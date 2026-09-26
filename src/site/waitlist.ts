@@ -10,15 +10,27 @@ export function parseEmail(value: unknown): string | null {
   return parsed.success ? parsed.data : null;
 }
 
+let queue: Promise<unknown> = Promise.resolve();
+
 /**
  * Appends the address to a JSON-lines file unless it's already there. In production the file sits on a persistent
  * volume mounted at /app/data, the same path the earlier site used, so existing signups carry over.
+ * Calls run one at a time, so two requests for the same new address can't both append it. That holds for one
+ * process; run a single instance while the list is a file.
  */
-export async function addToWaitlist(file: string, address: string, now = new Date()): Promise<"added" | "exists"> {
+export function addToWaitlist(file: string, address: string, now = new Date()): Promise<"added" | "exists"> {
+  const run = queue.then(() => appendIfNew(file, address, now));
+  queue = run.catch(() => undefined);
+  return run;
+}
+
+async function appendIfNew(file: string, address: string, now: Date): Promise<"added" | "exists"> {
   let existing = "";
   try {
     existing = await readFile(file, "utf8");
-  } catch {
+  } catch (error) {
+    // Only a missing file means an empty list. Anything else would skip the duplicate check, so it fails the request.
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
     await mkdir(dirname(file), { recursive: true });
   }
   if (existing.split("\n").some((line) => line.includes(`"email":${JSON.stringify(address)}`))) return "exists";
