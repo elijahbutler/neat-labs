@@ -7,6 +7,9 @@ import { themePackage } from "../catalogue/theme";
 
 export const SERVER_INFO = { name: "neat-labs-library", version: "0.1.0" };
 
+/** The current tools. find_components and theme_component are kept as older names for these. */
+export const PRIMARY_TOOLS = ["search_components", "get_component", "list_styles", "get_style"] as const;
+
 export interface LibraryOptions {
   /** Public site origin for preview links, such as https://library.example. Null leaves previewUrl empty. */
   siteUrl: string | null;

@@ -1,5 +1,7 @@
 # Roadmap
 
+This repository is neatlabs.design: the marketing site, the library, and the hosted MCP server. The editor's roadmap lives in its own private repository.
+
 Status as of 2026-09-25, catalogue 0.1.0. "Done" means the acceptance check below was run and passed on a local build. Nothing here is deployed yet.
 
 | ID | Work | Acceptance | Status |
@@ -25,6 +27,14 @@ Inspected in headless Chrome against `bun run dev` on localhost.
 - **Failure states.** A specimen with a bad example or a missing dark mode shows a red "Specimen failed to render" message.
 
 Not yet checked: a screen reader pass, loading on a slow connection (frames are blank until they load, with no placeholder), and what happens when `specimen.css` fails to load (the component shows unstyled).
+
+## Site
+
+| ID | Work | Status |
+| --- | --- | --- |
+| S01 | Home page and waitlist moved from the earlier site, with an original theme | Done locally. Waitlist works with and without JavaScript and writes the same file format as before |
+| S02 | Take over neatlabs.design | Planned. Needs the waitlist file carried over, a deploy, and an MCP check against the live URL; see [docs/deployment.md](docs/deployment.md) |
+| S03 | Link to the editor app once sign-in exists | Planned. The editor is private and has no sign-in yet |
 
 ## Next
 

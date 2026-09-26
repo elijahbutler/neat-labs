@@ -1,12 +1,12 @@
-# Neat Labs Library
+# Neat Labs
 
-React and Tailwind page sections and style guidelines, each rendered on the site before you copy it. A read-only MCP server gives coding agents the same catalogue.
+The public site at neatlabs.design: the marketing pages and waitlist for the Neat Labs editor, an open library of React and Tailwind components and style guidelines, and a read-only MCP server that gives coding agents the same library. The editor itself is a separate, private app.
 
-- **Components** are copyable source files: no imports, no client JavaScript, styled through `--nl-*` CSS variables.
+- **Components** are copyable source files: no imports, no client JavaScript, styled through `--nl-*` CSS variables. Every one is rendered on the site before you copy it.
 - **Styles** set those variables: color roles for light and dark, type with font licenses, radius, section spacing, and written do and don't rules. When a style leaves a value out, the site and the MCP server say so. They don't fill it in.
-- **Every item has a permission record.** See [PROVENANCE.md](PROVENANCE.md). The first release, catalogue 0.1.0, has 7 components and 3 styles, all written for this repository.
+- **Every item has a permission record.** See [PROVENANCE.md](PROVENANCE.md). Catalogue 0.1.0 has 7 components and 3 styles, all written for this repository.
 
-The catalogue is a set of references. The [Neat Labs editor](https://neatlabs.design) and your own agents should adapt a component to the components and tokens a project already has, not paste it in unchanged.
+The library is a set of references. The editor and your own agents should adapt a component to the components and tokens a project already has, not paste it in unchanged.
 
 ## Run it
 
@@ -18,13 +18,15 @@ bun run check      # validate the catalogue, typecheck, build CSS, run tests
 
 | Path | What it is |
 | --- | --- |
-| `/` | Components, with search, type filter, and a preview style |
+| `/` | Home page and waitlist |
+| `/components` | Components, with search, type filter, and a preview style |
 | `/components/:id` | Desktop and phone previews in light and dark, the copyable files, requirements, token roles, accessibility notes, and the same component in every style |
 | `/styles/:id` | Swatches with roles, hex values, and contrast; type specimens; radius and spacing; guidelines; missing fields |
 | `/specimen/:id?style=&mode=&example=` | The isolated page each preview frame loads |
 | `/catalogue.json` | The whole validated catalogue, for programs such as the Neat Labs editor |
 | `/api/mcp` | The MCP server over Streamable HTTP |
 | `/connect` | Client setup |
+| `/api/waitlist` | Waitlist signups (JSON or a plain form post) |
 
 ## MCP
 
@@ -64,10 +66,12 @@ catalogue/
   styles/<id>.json             colors, typography, radius, spacing, guidelines, provenance
 src/catalogue/                 schema, loader, theme export
 src/mcp/                       tool definitions, HTTP and stdio transports
-src/site/                      server-rendered pages and specimens
+src/site/                      server-rendered pages, specimens, and the waitlist
 ```
 
 Revisions are content hashes of each item's files, so a changed component gets a new revision. The loader rejects entries with missing fields, unknown token roles, imports in component source, or no permission record.
+
+Deployment notes are in [docs/deployment.md](docs/deployment.md).
 
 ## Contributing
 
@@ -75,4 +79,4 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Items wit
 
 ## License
 
-MIT, in [LICENSE](LICENSE). Fonts named by styles are not bundled and keep their own licenses, listed on each style page.
+MIT, in [LICENSE](LICENSE). Fonts aren't bundled and keep their own licenses: see PROVENANCE.md.

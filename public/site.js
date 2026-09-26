@@ -44,3 +44,38 @@ document.addEventListener("click", (event) => {
 for (const select of document.querySelectorAll("form[data-autosubmit] select")) {
   select.addEventListener("change", () => select.form.submit());
 }
+
+// Waitlist: send the form in place and show the outcome, instead of reloading the page.
+for (const form of document.querySelectorAll("form[data-waitlist]")) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = form.querySelector("button");
+    const alert = form.querySelector('[role="alert"]');
+    const input = form.querySelector('input[name="email"]');
+    const data = new FormData(form);
+    button.disabled = true;
+    button.textContent = "Joining…";
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.get("email"), website: data.get("website") }),
+      });
+      if (res.ok) {
+        const done = document.createElement("p");
+        done.setAttribute("role", "status");
+        done.className = "max-w-xl border-l-[3px] border-cobalt pl-4 text-[17px]";
+        done.textContent = "You're on the list. We'll email you when there's something to try.";
+        form.replaceWith(done);
+        return;
+      }
+      const json = await res.json().catch(() => ({}));
+      alert.textContent = json.error || `Something went wrong (${res.status}). Try again.`;
+    } catch {
+      alert.textContent = "No connection. Check your network and try again.";
+    }
+    input.setAttribute("aria-invalid", "true");
+    button.disabled = false;
+    button.textContent = "Join the waitlist";
+  });
+}

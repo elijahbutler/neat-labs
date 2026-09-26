@@ -7,6 +7,7 @@ import { loadCatalogue } from "../src/catalogue/load";
 import { themePackage } from "../src/catalogue/theme";
 import { renderComponent } from "../src/site/render";
 import { createHandler } from "../src/site/server";
+import { addToWaitlist, handleWaitlist, parseEmail, RateLimiter } from "../src/site/waitlist";
 
 const ROOT = join(import.meta.dir, "..");
 let server: ReturnType<typeof Bun.serve>;
@@ -19,14 +20,14 @@ afterAll(() => server.stop(true));
 
 describe("site", () => {
   test("pages answer", async () => {
-    for (const path of ["/", "/?q=pricing", "/?type=faq", "/components/hero-split", "/components/hero-split?style=signal&example=1", "/styles", "/styles/signal", "/connect", "/health"]) {
+    for (const path of ["/", "/components", "/components?q=pricing", "/components?type=faq", "/components/hero-split", "/components/hero-split?style=signal&example=1", "/styles", "/styles/signal", "/connect", "/health"]) {
       expect(`${path} ${(await get(path)).status}`).toBe(`${path} 200`);
     }
     for (const path of ["/components/nope", "/styles/nope", "/nope"]) expect((await get(path)).status).toBe(404);
   });
 
   test("search filters the grid", async () => {
-    const html = await (await get("/?type=faq")).text();
+    const html = await (await get("/components?type=faq")).text();
     expect(html).toContain("1 of 7 components");
     expect(html).toContain("/components/faq-disclosure");
     expect(html).not.toContain('href="/components/hero-split"');
@@ -82,6 +83,91 @@ describe("site", () => {
     const raw = JSON.stringify(body);
     expect(raw).not.toContain(ROOT);
     expect(raw).not.toContain("/Users/");
+  });
+});
+
+describe("marketing site", () => {
+  test("the home page has the pitch, two waitlist forms, and live catalogue counts", async () => {
+    const html = await (await get("/")).text();
+    expect(html).toContain("Get the pull request.");
+    expect(html.match(/data-waitlist/g)).toHaveLength(2);
+    expect(html).toContain('href="/components"');
+    const joined = await (await get("/?waitlist=joined")).text();
+    expect(joined).toContain("You&#x27;re on the list.");
+  });
+
+  test("pages from the earlier site redirect", async () => {
+    for (const [from, to] of [["/catalog", "/styles"], ["/flows", "/components"], ["/scanner", "/"]]) {
+      const res = await fetch(new URL(from!, server.url), { redirect: "manual" });
+      expect(`${from} ${res.status} ${res.headers.get("location")}`).toBe(`${from} 301 ${to}`);
+    }
+  });
+
+  test("/api/sse and /api/health keep answering for older clients and health checks", async () => {
+    const init = await fetch(new URL("/api/sse", server.url), {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
+    });
+    expect(init.status).toBe(200);
+    expect((await get("/api/health")).status).toBe(200);
+  });
+});
+
+describe("waitlist", () => {
+  const dir = mkdtempSync(join(tmpdir(), "waitlist-"));
+  afterAll(() => rmSync(dir, { recursive: true, force: true }));
+
+  test("parseEmail normalizes and rejects", () => {
+    expect(parseEmail("  Ada@Example.COM ")).toBe("ada@example.com");
+    for (const bad of ["", "not-an-email", "a@b", "a b@example.com", `${"x".repeat(250)}@example.com`]) expect(parseEmail(bad)).toBeNull();
+  });
+
+  test("appends one line per new address and ignores repeats", async () => {
+    const file = join(dir, "nested", "waitlist.jsonl");
+    expect(await addToWaitlist(file, "ada@example.com", new Date("2026-09-22T00:00:00Z"))).toBe("added");
+    expect(await addToWaitlist(file, "ada@example.com")).toBe("exists");
+    expect(await addToWaitlist(file, "grace@example.com")).toBe("added");
+    const lines = readFileSync(file, "utf8").trim().split("\n").map((l) => JSON.parse(l) as { email: string; at: string });
+    expect(lines.map((l) => l.email)).toEqual(["ada@example.com", "grace@example.com"]);
+    expect(lines[0]!.at).toBe("2026-09-22T00:00:00.000Z");
+  });
+
+  test("rate limiter allows a few requests per window per key", () => {
+    const limiter = new RateLimiter(2, 60_000);
+    expect([limiter.allow("ip", 0), limiter.allow("ip", 1), limiter.allow("ip", 2), limiter.allow("other", 2), limiter.allow("ip", 60_001)]).toEqual([true, true, false, true, true]);
+  });
+
+  test("JSON posts get JSON replies; plain form posts redirect home with the outcome", async () => {
+    const file = join(dir, "handler.jsonl");
+    const post = (body: string, type: string) =>
+      handleWaitlist(new Request("http://site.test/api/waitlist", { method: "POST", headers: { "Content-Type": type }, body }), { file, limiter: new RateLimiter(100, 60_000) });
+
+    const json = await post(JSON.stringify({ email: "ada@example.com" }), "application/json");
+    expect(json.status).toBe(200);
+    expect(await json.json()).toEqual({ ok: true });
+
+    const bad = await post(JSON.stringify({ email: "nope" }), "application/json");
+    expect(bad.status).toBe(400);
+
+    const form = await post("email=grace%40example.com&website=", "application/x-www-form-urlencoded");
+    expect(form.status).toBe(303);
+    expect(form.headers.get("location")).toBe("/?waitlist=joined#waitlist");
+
+    const badForm = await post("email=nope", "application/x-www-form-urlencoded");
+    expect(badForm.headers.get("location")).toBe("/?waitlist=invalid#waitlist");
+
+    const bot = await post(JSON.stringify({ email: "bot@example.com", website: "x" }), "application/json");
+    expect(bot.status).toBe(200);
+
+    expect(readFileSync(file, "utf8").trim().split("\n").map((l) => (JSON.parse(l) as { email: string }).email)).toEqual(["ada@example.com", "grace@example.com"]);
+  });
+
+  test("the limiter answers 429", async () => {
+    const limiter = new RateLimiter(1, 60_000);
+    const req = () => new Request("http://site.test/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+    await handleWaitlist(req(), { file: join(dir, "limit.jsonl"), limiter });
+    expect((await handleWaitlist(req(), { file: join(dir, "limit.jsonl"), limiter })).status).toBe(429);
   });
 });
 

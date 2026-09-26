@@ -5,9 +5,11 @@ import { catalogue as loadDefault } from "../catalogue/load";
 import type { Catalogue } from "../catalogue/schema";
 import type { Mode } from "../catalogue/theme";
 import { handleMcp } from "../mcp/http";
-import { searchComponents } from "../mcp/tools";
+import { PRIMARY_TOOLS, searchComponents } from "../mcp/tools";
+import { HomePage, type WaitlistOutcome } from "./home";
 import { CataloguePage, ComponentPage, ConnectPage, NotFoundPage, StylePage, StylesPage } from "./pages";
 import { specimenHtml } from "./specimen";
+import { handleWaitlist } from "./waitlist";
 
 /** Paper is the one seed style with every field set, so it is the fairest first impression. */
 const DEFAULT_STYLE = "paper";
@@ -16,6 +18,13 @@ const ASSETS: Record<string, { path: string; type: string }> = {
   "site.css": { path: join(ROOT, "dist", "site.css"), type: "text/css; charset=utf-8" },
   "specimen.css": { path: join(ROOT, "dist", "specimen.css"), type: "text/css; charset=utf-8" },
   "site.js": { path: join(ROOT, "public", "site.js"), type: "text/javascript; charset=utf-8" },
+};
+
+const LEGACY_REDIRECTS: Record<string, string> = {
+  "/catalog": "/styles",
+  "/flows": "/components",
+  "/scanner": "/",
+  "/editor": "/",
 };
 
 const SECURITY_HEADERS = {
@@ -44,8 +53,16 @@ export function createHandler(getCatalogue: () => Promise<Catalogue> = loadDefau
     const styleParam = url.searchParams.get("style");
     const style = catalogue.styles.find((s) => s.id === styleParam) ?? catalogue.styles.find((s) => s.id === DEFAULT_STYLE) ?? catalogue.styles[0]!;
 
-    if (path === "/api/mcp" || path === "/mcp") return handleMcp(req, catalogue, { siteUrl: origin });
+    // /api/sse is where older connection instructions pointed; it serves the same stateless endpoint.
+    if (path === "/api/mcp" || path === "/mcp" || path === "/api/sse") return handleMcp(req, catalogue, { siteUrl: origin });
+    if (path === "/api/waitlist") {
+      return req.method === "POST" ? handleWaitlist(req) : new Response("Method not allowed", { status: 405, headers: { Allow: "POST" } });
+    }
     if (req.method !== "GET" && req.method !== "HEAD") return new Response("Method not allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
+
+    // Pages from the earlier site that no longer exist.
+    const moved = LEGACY_REDIRECTS[path];
+    if (moved) return new Response(null, { status: 301, headers: { Location: moved } });
 
     if (path.startsWith("/assets/")) {
       const asset = ASSETS[path.slice("/assets/".length)];
@@ -54,13 +71,19 @@ export function createHandler(getCatalogue: () => Promise<Catalogue> = loadDefau
       return new Response(file, { headers: { "Content-Type": asset.type, "Cache-Control": "public, max-age=300", ...SECURITY_HEADERS } });
     }
 
-    if (path === "/health") return Response.json({ ok: true, catalogueVersion: catalogue.version, components: catalogue.components.length, styles: catalogue.styles.length });
+    if (path === "/health" || path === "/api/health") return Response.json({ ok: true, catalogueVersion: catalogue.version, components: catalogue.components.length, styles: catalogue.styles.length });
 
     if (path === "/catalogue.json") {
       return Response.json({ ...catalogue, siteUrl: origin }, { headers: { "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=60", ...SECURITY_HEADERS } });
     }
 
-    if (path === "/" || path === "/components") {
+    if (path === "/") {
+      const outcome = url.searchParams.get("waitlist");
+      const known: WaitlistOutcome[] = ["joined", "invalid", "busy", "error"];
+      return page(<HomePage catalogue={catalogue} toolCount={PRIMARY_TOOLS.length} outcome={known.includes(outcome as WaitlistOutcome) ? (outcome as WaitlistOutcome) : null} />);
+    }
+
+    if (path === "/components") {
       const query = url.searchParams.get("q")?.slice(0, 200) ?? "";
       const type = url.searchParams.get("type")?.slice(0, 40) ?? "";
       return page(<CataloguePage catalogue={catalogue} results={searchComponents(catalogue, query, type)} query={query} type={type} style={style} />);

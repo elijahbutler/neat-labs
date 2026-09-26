@@ -30,6 +30,10 @@ Styles name fonts but don't ship them.
 | Arial Black, Helvetica Neue | `signal` | Proprietary system fonts | Named only. Used where the viewer's device has them |
 | System UI and monospace faces | all | Operating system | Nothing downloaded |
 
+## The site itself
+
+The site's design (palette, type scale, components in `src/site/site.css`), its copy, and the editor illustration on the home page were written for Neat Labs. The site loads Instrument Serif, Instrument Sans, and JetBrains Mono from Google Fonts; all three are under the SIL Open Font License 1.1. Icons in the illustration come from Lucide (ISC License).
+
 ## Adding an item
 
 Record who made it, where it came from, the license or written permission, what it permits, and the evidence. If any of that is unclear, leave the item out and ask. Don't infer permission from public availability, attribution, or another repository's license statement.
