@@ -3,13 +3,14 @@ import { ROLE_DESCRIPTIONS, type Catalogue, type ColorRole, type ComponentRecord
 import { themePackage, type Mode, type ThemePackage } from "../catalogue/theme";
 import { contrastRatio } from "../catalogue/contrast";
 import { Layout } from "./layout";
+import { hasInteractiveElements, type ForcedState } from "./states";
 
 
 const link = "link";
 const label = "font-mono text-[11px] uppercase tracking-wider text-quiet";
 
-function specimenSrc(component: ComponentRecord, style: StyleRecord, mode: Mode, example: number) {
-  const params = new URLSearchParams({ style: style.id, mode, example: String(example) });
+function specimenSrc(component: ComponentRecord, style: StyleRecord, mode: Mode, example: number, state?: ForcedState) {
+  const params = new URLSearchParams({ style: style.id, mode, example: String(example), ...(state ? { state } : {}) });
   return `/specimen/${component.id}?${params}`;
 }
 
@@ -23,13 +24,14 @@ function Frame({ src, width, caption, maxHeight, decorative, background }: { src
       data-fixed={decorative ? "" : undefined}
       style={{ height: maxHeight ?? 480, background }}
     >
+      <span aria-hidden="true" className="caption absolute inset-0 flex items-center justify-center text-quiet">Loading preview</span>
       <iframe
         src={src}
         title={caption ?? "Component preview"}
         loading="lazy"
         sandbox="allow-same-origin"
         tabIndex={decorative ? -1 : undefined}
-        className="block origin-top-left border-0 focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-cobalt"
+        className="relative block origin-top-left border-0 focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-cobalt"
         style={{ width, height: maxHeight ?? 480 }}
       />
     </div>
@@ -189,6 +191,19 @@ export function ComponentPage({ catalogue, component, style, example }: { catalo
         ))}
         {!modes.includes("dark") ? <p className="mt-4 text-sm text-quiet">{style.name} has no dark mode, so only light is shown.</p> : null}
       </section>
+
+      {hasInteractiveElements(component.source) ? (
+        <section aria-labelledby="state-previews" className="mt-10">
+          <h2 id="state-previews" className="display text-[32px]">Hover and keyboard focus</h2>
+          <p className="mt-2 max-w-3xl text-sm text-quiet">
+            The component's own hover and focus styles, switched on for every link and button at once so you can see them without a mouse. In the previews above they work as usual.
+          </p>
+          <div className="mt-4 grid gap-6 lg:grid-cols-2">
+            <Frame src={specimenSrc(component, style, "light", example, "hover")} width={1280} caption="Hover, desktop, light" />
+            <Frame src={specimenSrc(component, style, "light", example, "focus")} width={1280} caption="Keyboard focus, desktop, light" />
+          </div>
+        </section>
+      ) : null}
 
       <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
         <section aria-labelledby="install" className="min-w-0 space-y-4">

@@ -1,6 +1,21 @@
 import type { Catalogue, ComponentRecord, StyleRecord } from "../catalogue/schema";
 import { themePackage, type Mode } from "../catalogue/theme";
+import { join } from "node:path";
 import { renderComponent } from "./render";
+import { forcedStateCss, forceStateMarkup, type ForcedState } from "./states";
+
+const SPECIMEN_CSS = join(import.meta.dir, "..", "..", "dist", "specimen.css");
+const forcedCache = new Map<ForcedState, Promise<string>>();
+
+/** The catalogue's compiled state rules, rewritten so a class can switch them on. Read once per process. */
+function forcedCss(state: ForcedState): Promise<string> {
+  let css = forcedCache.get(state);
+  if (!css) {
+    css = Bun.file(SPECIMEN_CSS).text().then((text) => forcedStateCss(text, state)).catch(() => "");
+    forcedCache.set(state, css);
+  }
+  return css;
+}
 
 const escape = (text: string) => text.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
@@ -9,6 +24,8 @@ export interface SpecimenRequest {
   style: StyleRecord;
   mode: Mode;
   example: number;
+  /** Draw every link, button, and summary in this state. Preview only. */
+  state?: ForcedState;
 }
 
 function documentHtml(title: string, head: string, htmlAttrs: string, body: string, background = "#FFFFFF") {
@@ -54,7 +71,9 @@ export async function specimenHtml(catalogue: Catalogue, req: SpecimenRequest): 
     `<link rel="stylesheet" href="/assets/specimen.css">`,
     ...pkg.fonts.flatMap((f) => (f.link ? [f.link] : [])),
     `<style>\n${pkg.themeCss}</style>`,
+    ...(req.state ? [`<style data-forced-state="${req.state}">${await forcedCss(req.state)}</style>`] : []),
   ].join("\n");
+  if (req.state) markup = forceStateMarkup(markup, req.state);
   // The page behind the component uses the style's canvas, even when the component doesn't read --nl-canvas.
   const canvas = (mode === "dark" ? style.colors.dark : style.colors.light)?.canvas ?? "#FFFFFF";
   return { status: 200, html: documentHtml(title, head, mode === "dark" ? ' data-theme="dark"' : "", `<div data-specimen="${component.id}">${markup}</div>`, canvas) };

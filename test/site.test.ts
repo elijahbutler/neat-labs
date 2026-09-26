@@ -44,7 +44,20 @@ describe("site", () => {
     expect(html).toContain(await renderComponent(component, component.examples[1]!.props));
   });
 
-  test("a specimen that can't render says so", async () => {
+  test("state specimens force the component's own hover and focus rules, and leave the package alone", async () => {
+    const plain = await (await get("/specimen/cta-band?style=paper")).text();
+    const hover = await (await get("/specimen/cta-band?style=paper&state=hover")).text();
+    const focus = await (await get("/specimen/cta-band?style=paper&state=focus")).text();
+    expect(plain).not.toContain("nl-force");
+    expect(hover).toContain('data-forced-state="hover"');
+    expect(hover).toMatch(/<a [^>]*class="nl-force-hover /);
+    expect(focus).toContain(".nl-force-focus");
+    const page = await (await get("/components/cta-band")).text();
+    expect(page).toContain("state=hover");
+    expect(await (await get("/components/stat-row")).text()).not.toContain("state=hover");
+  });
+
+    test("a specimen that can't render says so", async () => {
     const missingExample = await get("/specimen/hero-split?example=9");
     expect(missingExample.status).toBe(404);
     expect(await missingExample.text()).toContain("Specimen failed to render");

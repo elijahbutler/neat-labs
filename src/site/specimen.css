@@ -1,3 +1,3 @@
 /* Tailwind output for the catalogue components only. Specimens load this and the style's theme.css, nothing else. */
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @source "../../catalogue/components";

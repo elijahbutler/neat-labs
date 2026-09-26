@@ -104,7 +104,9 @@ export function createHandler(getCatalogue: () => Promise<Catalogue> = loadDefau
       const component = catalogue.components.find((c) => c.id === specimenMatch[1]);
       const mode = url.searchParams.get("mode") ?? "light";
       if (!component || (mode !== "light" && mode !== "dark")) return new Response("Unknown component or mode.", { status: 404 });
-      const { status, html } = await specimenHtml(catalogue, { component, style, mode: mode as Mode, example: Number(url.searchParams.get("example") ?? 0) });
+      const stateParam = url.searchParams.get("state");
+      const state = stateParam === "hover" || stateParam === "focus" ? stateParam : undefined;
+      const { status, html } = await specimenHtml(catalogue, { component, style, mode: mode as Mode, example: Number(url.searchParams.get("example") ?? 0), state });
       // Specimens are only framed by this site. no-transform keeps a CDN from injecting scripts, such as an analytics
       // beacon, that the sandboxed frame would block.
       return new Response(html, {
