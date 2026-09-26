@@ -1,0 +1,28 @@
+{
+  "id": "cta-band",
+  "type": "cta",
+  "name": "Call-to-action band",
+  "summary": "Full-width band with one sentence, one line of support, and one action. Accent or quiet surface tone.",
+  "export": "CtaBand",
+  "tags": ["conversion", "band", "footer"],
+  "accessibility": [
+    "On the accent tone the action swaps colors: accent-ink background with accent text. Check that pair's contrast for your style.",
+    "The action is a link with a visible focus outline."
+  ],
+  "states": [
+    { "name": "hover", "description": "The action drops to 90% opacity." },
+    { "name": "focus-visible", "description": "A 2px outline in the focus color." },
+    { "name": "surface tone", "description": "Surface background with ruled edges instead of the accent fill." }
+  ],
+  "examples": [
+    { "name": "Accent", "props": {} },
+    { "name": "Surface", "props": { "tone": "surface" } }
+  ],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. No third-party source, copy, or assets.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

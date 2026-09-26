@@ -1,0 +1,32 @@
+{
+  "name": "neat-labs-library",
+  "version": "0.1.0",
+  "description": "Open React and Tailwind components and style guidelines, with rendered previews and a read-only MCP server.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i src/site/site.css -o dist/site.css --minify && tailwindcss -i src/site/specimen.css -o dist/specimen.css --minify",
+    "dev": "bun run build:css && bun --hot src/site/server.tsx",
+    "start": "bun src/site/server.tsx",
+    "mcp": "bun src/mcp/stdio.ts",
+    "validate": "bun scripts/validate.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "check": "bun run validate && bun run typecheck && bun run build:css && bun test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "@types/bun": "1.4.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
+  }
+}

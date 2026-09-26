@@ -1,0 +1,36 @@
+{
+  "id": "hero-split",
+  "type": "hero",
+  "name": "Split hero",
+  "summary": "Headline, supporting copy, and two actions beside a numbered checklist panel. Stacks on phones.",
+  "export": "HeroSplit",
+  "tags": ["landing", "above the fold", "two column"],
+  "accessibility": [
+    "Uses a single <h1>. Place it once per page.",
+    "The checklist is an ordered list; the number badges are aria-hidden so screen readers don't read each number twice.",
+    "Both actions are links with visible focus outlines."
+  ],
+  "states": [
+    { "name": "hover", "description": "The primary action drops to 90% opacity; the secondary action fills with the surface color." },
+    { "name": "focus-visible", "description": "A 2px outline in the focus color on both actions." }
+  ],
+  "examples": [
+    { "name": "Default", "props": {} },
+    {
+      "name": "Short checklist",
+      "props": {
+        "eyebrow": "For small teams",
+        "title": "One inbox for every customer question.",
+        "body": "Email, chat, and forms land in the same queue, with the history attached.",
+        "checklist": ["Connect your inbox", "Invite the team"]
+      }
+    }
+  ],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. No third-party source, copy, or assets.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "stat-row",
+  "type": "stat",
+  "name": "Stat row",
+  "summary": "Three figures with labels in a ruled row, plus a source line underneath. Stacks on phones.",
+  "export": "StatRow",
+  "tags": ["metrics", "social proof"],
+  "accessibility": [
+    "Figures are a description list: each label is a <dt> and each value a <dd>, so they are read as pairs.",
+    "The visual order puts the value first with flex-col-reverse, while the source order keeps the label first for screen readers."
+  ],
+  "states": [],
+  "examples": [
+    { "name": "Three figures", "props": {} },
+    {
+      "name": "Source cited",
+      "props": {
+        "label": "Source: internal usage data, August 2026.",
+        "stats": [
+          { "value": "98.2%", "label": "Uptime over 90 days" },
+          { "value": "140 ms", "label": "Median API response" },
+          { "value": "6", "label": "Regions" }
+        ]
+      }
+    }
+  ],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. No third-party source, copy, or assets.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

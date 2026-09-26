@@ -1,0 +1,71 @@
+{
+  "id": "paper",
+  "name": "Paper",
+  "summary": "Warm off-white paper, near-black ink, and one terracotta accent. A serif display face over a system sans.",
+  "colors": {
+    "light": {
+      "canvas": "#F5F1E8",
+      "surface": "#FFFDF8",
+      "ink": "#1F1B16",
+      "muted": "#5E554A",
+      "line": "#D9D0C1",
+      "accent": "#B4462C",
+      "accent-ink": "#FFFFFF",
+      "focus": "#1F5FBF"
+    },
+    "dark": {
+      "canvas": "#16130F",
+      "surface": "#211D18",
+      "ink": "#F2ECE1",
+      "muted": "#B3A999",
+      "line": "#3A342C",
+      "accent": "#E07A5F",
+      "accent-ink": "#1A0F0B",
+      "focus": "#8AB4F8"
+    }
+  },
+  "typography": {
+    "display": {
+      "family": "Fraunces",
+      "stack": "\"Fraunces\", ui-serif, Georgia, serif",
+      "weights": [600],
+      "license": "SIL Open Font License 1.1",
+      "load": "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap"
+    },
+    "sans": {
+      "family": "System sans",
+      "stack": "ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+      "weights": [400, 500, 600],
+      "license": "Operating system font. Nothing is downloaded or redistributed.",
+      "load": null
+    },
+    "mono": {
+      "family": "System mono",
+      "stack": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+      "weights": [400],
+      "license": "Operating system font. Nothing is downloaded or redistributed.",
+      "load": null
+    }
+  },
+  "radius": "6px",
+  "spacing": { "base": "4px", "sectionY": "96px" },
+  "guidelines": {
+    "do": [
+      "Use the terracotta accent for one primary action per view.",
+      "Set headings in Fraunces at 600 and keep body copy in the system sans.",
+      "Separate sections with the line color instead of shadows."
+    ],
+    "dont": [
+      "Don't put muted text on the surface color at sizes under 14px; use ink instead.",
+      "Don't add a second accent color. Use ink or muted for everything else."
+    ]
+  },
+  "inferred": [],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. Colors and rules are original. Fraunces is referenced, not bundled, and is licensed separately under the SIL Open Font License 1.1.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

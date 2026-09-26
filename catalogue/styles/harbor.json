@@ -1,0 +1,71 @@
+{
+  "id": "harbor",
+  "name": "Harbor",
+  "summary": "Cool blue-grey neutrals with a saturated blue accent and generous 12px corners. Written for Inter, which this package does not load.",
+  "colors": {
+    "light": {
+      "canvas": "#F7F9FC",
+      "surface": "#FFFFFF",
+      "ink": "#0E1726",
+      "muted": "#4A5568",
+      "line": "#D8DEE8",
+      "accent": "#1D4ED8",
+      "accent-ink": "#FFFFFF",
+      "focus": "#0369A1"
+    },
+    "dark": {
+      "canvas": "#0B1220",
+      "surface": "#121B2E",
+      "ink": "#E6EDF7",
+      "muted": "#9AA8BD",
+      "line": "#24324A",
+      "accent": "#60A5FA",
+      "accent-ink": "#0B1220",
+      "focus": "#7DD3FC"
+    }
+  },
+  "typography": {
+    "display": {
+      "family": "Inter",
+      "stack": "\"Inter\", ui-sans-serif, system-ui, sans-serif",
+      "weights": [600, 700],
+      "license": "SIL Open Font License 1.1. Not loaded by this package: install Inter yourself or the stack falls back to the system sans.",
+      "load": null
+    },
+    "sans": {
+      "family": "Inter",
+      "stack": "\"Inter\", ui-sans-serif, system-ui, sans-serif",
+      "weights": [400, 500],
+      "license": "SIL Open Font License 1.1. Not loaded by this package: install Inter yourself or the stack falls back to the system sans.",
+      "load": null
+    },
+    "mono": {
+      "family": "System mono",
+      "stack": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+      "weights": [400],
+      "license": "Operating system font. Nothing is downloaded or redistributed.",
+      "load": null
+    }
+  },
+  "radius": "12px",
+  "spacing": { "base": "4px", "sectionY": "112px" },
+  "guidelines": {
+    "do": [
+      "Use blue for actions and links only, so blue always means clickable.",
+      "Keep cards on the white surface over the tinted canvas.",
+      "Use 12px corners on cards and buttons alike."
+    ],
+    "dont": [
+      "Don't use blue for decoration, such as icons that do nothing.",
+      "Don't ship this style without loading Inter if the design depends on its exact widths."
+    ]
+  },
+  "inferred": [],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. Colors and rules are original. Inter is named as the intended face but is not bundled or loaded.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

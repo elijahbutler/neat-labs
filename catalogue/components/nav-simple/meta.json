@@ -1,0 +1,36 @@
+{
+  "id": "nav-simple",
+  "type": "nav",
+  "name": "Simple navigation",
+  "summary": "Brand, three to five links, and one action. Links collapse into a native disclosure menu on phones.",
+  "export": "NavSimple",
+  "tags": ["header", "navigation", "responsive"],
+  "accessibility": [
+    "The <nav> has aria-label=\"Main\" so it is distinguishable from other navigation landmarks.",
+    "The phone menu is a native <details> element: Enter and Space toggle it, and it works without JavaScript.",
+    "Every link and the menu toggle show a focus outline in the focus color."
+  ],
+  "states": [
+    { "name": "hover", "description": "Links darken from muted to ink; the action button drops to 90% opacity." },
+    { "name": "focus-visible", "description": "A 2px outline in the focus color, offset by 2px." },
+    { "name": "menu open", "description": "Below md, the Menu disclosure opens a panel with the links and the action." }
+  ],
+  "examples": [
+    { "name": "Default", "props": {} },
+    {
+      "name": "Two links",
+      "props": {
+        "brand": "Example Docs",
+        "links": [{ "label": "Guides", "href": "#guides" }, { "label": "API", "href": "#api" }],
+        "action": { "label": "Sign in", "href": "#sign-in" }
+      }
+    }
+  ],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. No third-party source, copy, or assets.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

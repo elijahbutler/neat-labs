@@ -1,0 +1,35 @@
+{
+  "id": "features-grid",
+  "type": "features",
+  "name": "Feature grid",
+  "summary": "Heading and intro above a ruled grid of numbered feature notes. Three, two, or one column by width.",
+  "export": "FeaturesGrid",
+  "tags": ["features", "grid", "content"],
+  "accessibility": [
+    "Features are a list, so screen readers announce the count.",
+    "Headings step from h2 to h3. Put the grid under a page that already has an h1."
+  ],
+  "states": [],
+  "examples": [
+    { "name": "Six features", "props": {} },
+    {
+      "name": "Three features",
+      "props": {
+        "heading": "Three things it does well",
+        "intro": "No more, no less.",
+        "features": [
+          { "title": "Imports", "body": "Bring in CSV or connect a spreadsheet." },
+          { "title": "Checks", "body": "Flags rows that don't match the schema." },
+          { "title": "Sync", "body": "Pushes clean rows back on a schedule." }
+        ]
+      }
+    }
+  ],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. No third-party source, copy, or assets.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

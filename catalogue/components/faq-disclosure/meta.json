@@ -1,0 +1,28 @@
+{
+  "id": "faq-disclosure",
+  "type": "faq",
+  "name": "FAQ disclosure",
+  "summary": "Questions in native <details> elements with a plus that turns into a cross when open.",
+  "export": "FaqDisclosure",
+  "tags": ["faq", "accordion", "no javascript"],
+  "accessibility": [
+    "Each question is a native <summary>, so Enter and Space toggle it and screen readers announce expanded or collapsed.",
+    "The plus sign is aria-hidden; its rotation only runs when the user hasn't asked for reduced motion.",
+    "Questions open independently. Opening one doesn't close another."
+  ],
+  "states": [
+    { "name": "open", "description": "The answer shows under the question and the plus rotates 45 degrees." },
+    { "name": "focus-visible", "description": "A 2px outline in the focus color around the question row." }
+  ],
+  "examples": [
+    { "name": "All closed", "props": {} },
+    { "name": "First open", "props": { "openIndex": 0 } }
+  ],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. No third-party source, copy, or assets.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

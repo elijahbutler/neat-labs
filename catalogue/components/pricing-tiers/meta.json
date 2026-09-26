@@ -1,0 +1,38 @@
+{
+  "id": "pricing-tiers",
+  "type": "pricing",
+  "name": "Pricing tiers",
+  "summary": "Plan cards with price, summary, features, and an action. One plan can carry the accent border.",
+  "export": "PricingTiers",
+  "tags": ["pricing", "plans", "cards"],
+  "accessibility": [
+    "Plans are list items with an h3 each, so users can jump between plans by heading.",
+    "Check marks are decorative and aria-hidden; the feature text carries the meaning.",
+    "The highlighted plan is marked with text as well as color."
+  ],
+  "states": [
+    { "name": "hover", "description": "The highlighted plan's action drops to 90% opacity; other actions fill with the canvas color." },
+    { "name": "focus-visible", "description": "A 2px outline in the focus color on each action." },
+    { "name": "highlighted", "description": "A 2px accent border and a mono label above the plan name." }
+  ],
+  "examples": [
+    { "name": "Middle plan highlighted", "props": {} },
+    {
+      "name": "No highlight",
+      "props": {
+        "heading": "Plans",
+        "plans": [
+          { "name": "Monthly", "price": "$12", "period": "per month", "summary": "Cancel any time.", "features": ["All features"], "action": { "label": "Choose monthly", "href": "#monthly" } },
+          { "name": "Yearly", "price": "$120", "period": "per year", "summary": "Two months free.", "features": ["All features"], "action": { "label": "Choose yearly", "href": "#yearly" } }
+        ]
+      }
+    }
+  ],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. No third-party source, copy, or assets.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "signal",
+  "name": "Signal",
+  "summary": "White, black, and safety yellow with square corners. Light mode only, and no focus color defined.",
+  "colors": {
+    "light": {
+      "canvas": "#FFFFFF",
+      "surface": "#F4F4F0",
+      "ink": "#0A0A0A",
+      "muted": "#3F3F3F",
+      "line": "#0A0A0A",
+      "accent": "#FFD400",
+      "accent-ink": "#0A0A0A",
+      "focus": null
+    },
+    "dark": null
+  },
+  "typography": {
+    "display": {
+      "family": "Arial Black",
+      "stack": "\"Arial Black\", \"Helvetica Neue\", Arial, sans-serif",
+      "weights": [900],
+      "license": "Operating system font where available. Nothing is downloaded or redistributed.",
+      "load": null
+    },
+    "sans": {
+      "family": "Helvetica Neue",
+      "stack": "\"Helvetica Neue\", Arial, sans-serif",
+      "weights": [400, 700],
+      "license": "Operating system font where available. Nothing is downloaded or redistributed.",
+      "load": null
+    },
+    "mono": {
+      "family": "System mono",
+      "stack": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+      "weights": [400],
+      "license": "Operating system font. Nothing is downloaded or redistributed.",
+      "load": null
+    }
+  },
+  "radius": "0px",
+  "spacing": { "base": "8px", "sectionY": null },
+  "guidelines": {
+    "do": [
+      "Use yellow as a fill behind black text, never as text on white.",
+      "Give yellow buttons on white a black border so their edge is visible."
+    ],
+    "dont": [
+      "Don't soften the corners. The style depends on square edges.",
+      "Don't use this style for long reading pages; the display face is heavy."
+    ]
+  },
+  "inferred": [],
+  "provenance": {
+    "author": "Neat Labs",
+    "origin": "original",
+    "license": "MIT",
+    "evidence": "Written for this repository on 2026-09-25. Left without a dark mode, a focus color, or a section spacing value on purpose, so the site and MCP show how missing values are reported.",
+    "permittedUses": ["copy", "modify", "redistribute", "commercial use"]
+  }
+}
