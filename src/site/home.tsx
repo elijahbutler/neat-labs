@@ -214,7 +214,7 @@ export function HomePage({ catalogue, toolCount, outcome }: { catalogue: Catalog
       <section aria-labelledby="today" className="mx-auto max-w-[1200px] px-5 pt-28 sm:px-8 sm:pt-36">
         <h2 id="today" className="display text-[clamp(40px,5.5vw,64px)]">Available today</h2>
         <p className="mt-4 max-w-[560px] text-[17px] leading-[1.6] text-quiet">
-          While the editor is in development, the library it draws from is open to use. The source is on <a className="link" href="https://github.com/elijahbutler/neat-labs-library">GitHub</a>.
+          While the editor is in development, the library it draws from is open to use. The source is on <a className="link" href="https://github.com/elijahbutler/neat-labs">GitHub</a>.
         </p>
         <ul className="mt-12 border-t border-ink">
           {today.map((item) => (

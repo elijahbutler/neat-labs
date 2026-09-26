@@ -35,4 +35,4 @@ jobs:
           curl -fs -X POST localhost:3000/api/waitlist -H 'content-type: application/json' -d '{"email":"ci@example.com"}'
           grep -q ci@example.com data/waitlist.jsonl
           curl -fs -X POST localhost:3000/api/mcp -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' \
-            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' | grep -q neat-labs-library
+            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' | grep -q neat-labs

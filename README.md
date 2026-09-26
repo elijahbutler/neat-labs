@@ -43,13 +43,13 @@ The server is read-only and stateless. It returns catalogue data and preview lin
 Hosted, with Claude Code:
 
 ```sh
-claude mcp add --transport http neat-labs-library https://<site>/api/mcp
+claude mcp add --transport http neat-labs https://<site>/api/mcp
 ```
 
 Local, over stdio:
 
 ```sh
-claude mcp add neat-labs-library -- bun run /path/to/neat-labs-library/src/mcp/stdio.ts
+claude mcp add neat-labs -- bun run /path/to/neat-labs/src/mcp/stdio.ts
 ```
 
 Set `NEAT_LIBRARY_URL` for the stdio server if you want it to return preview links; without it, `previewUrl` is `null`.

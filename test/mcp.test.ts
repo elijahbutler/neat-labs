@@ -55,7 +55,7 @@ describe("MCP over Streamable HTTP", () => {
   test("discovery, search, fetches, and errors with the SDK client", async () => {
     const client = new Client({ name: "test", version: "1.0.0" });
     await client.connect(new StreamableHTTPClientTransport(endpoint));
-    expect(client.getServerVersion()?.name).toBe("neat-labs-library");
+    expect(client.getServerVersion()?.name).toBe("neat-labs");
     await exercise(client);
     const component = json(await client.callTool({ name: "get_component", arguments: { id: "hero-split" } }));
     expect(component.previewUrl).toBe(new URL("/components/hero-split", server.url).toString());
@@ -87,7 +87,7 @@ describe("MCP over Streamable HTTP", () => {
     expect(res.headers.get("access-control-allow-origin")).toBe("*");
     const body = (await res.json()) as { result: { protocolVersion: string; serverInfo: { name: string } } };
     expect(body.result.protocolVersion).toBe("2025-03-26");
-    expect(body.result.serverInfo.name).toBe("neat-labs-library");
+    expect(body.result.serverInfo.name).toBe("neat-labs");
   });
 
   test("GET and DELETE are refused because the server keeps no sessions", async () => {

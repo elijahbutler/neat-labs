@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { Catalogue } from "../catalogue/schema";
 
-export const REPO_URL = "https://github.com/elijahbutler/neat-labs-library";
+export const REPO_URL = "https://github.com/elijahbutler/neat-labs";
 
 const NAV = [
   { href: "/", label: "Editor" },

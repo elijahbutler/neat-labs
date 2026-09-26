@@ -411,14 +411,14 @@ export function ConnectPage({ catalogue, origin }: { catalogue: Catalogue; origi
           <h2 id="hosted" className="display text-[32px]">Hosted endpoint</h2>
           <p className="text-sm text-quiet">Streamable HTTP, stateless, JSON replies.</p>
           <CopyBlock id="endpoint" title="Endpoint" code={endpoint} />
-          <CopyBlock id="claude" title="Claude Code" code={`claude mcp add --transport http neat-labs-library ${endpoint}`} />
-          <CopyBlock id="codex" title="Codex CLI (~/.codex/config.toml)" code={`[mcp_servers.neat-labs-library]\nurl = "${endpoint}"`} />
-          <CopyBlock id="json" title="Clients that read an mcpServers JSON file" code={JSON.stringify({ mcpServers: { "neat-labs-library": { url: endpoint } } }, null, 2)} />
+          <CopyBlock id="claude" title="Claude Code" code={`claude mcp add --transport http neat-labs ${endpoint}`} />
+          <CopyBlock id="codex" title="Codex CLI (~/.codex/config.toml)" code={`[mcp_servers.neat-labs]\nurl = "${endpoint}"`} />
+          <CopyBlock id="json" title="Clients that read an mcpServers JSON file" code={JSON.stringify({ mcpServers: { "neat-labs": { url: endpoint } } }, null, 2)} />
         </section>
         <section aria-labelledby="local" className="space-y-3">
           <h2 id="local" className="display text-[32px]">Run it locally</h2>
           <p className="text-sm text-quiet">Clone the repository, run <code className="font-mono">bun install</code>, then point your client at the stdio server.</p>
-          <CopyBlock id="stdio" title="Claude Code, stdio" code={`claude mcp add neat-labs-library -- bun run /path/to/neat-labs-library/src/mcp/stdio.ts`} />
+          <CopyBlock id="stdio" title="Claude Code, stdio" code={`claude mcp add neat-labs -- bun run /path/to/neat-labs/src/mcp/stdio.ts`} />
         </section>
         <section aria-labelledby="tools" className="space-y-3">
           <h2 id="tools" className="display text-[32px]">Tools</h2>
